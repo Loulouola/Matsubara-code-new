@@ -173,7 +173,7 @@ opt.omegaMax = 30*p.Delta; % Maximum matsubara frequency included
 opt.minOmegaStop = 5*p.Delta;   % the code won't consider stopping the sum before reaching this energy.
 opt.matsRelTol = 1e-6;          % the Matsubara sum must converge to a relative tolerance of 10^{-6}
 opt.matsConsecutive = 6;        % the convergence condition must hold for six consecutive terms before the sum stops.
-opt.Nmax = ceil(0.5*(opt.omegaMax/(pi*p.kB*p.T)-1 % converts the maximum energy and temperature into the highest Matsubara index
+opt.Nmax = ceil(0.5*(opt.omegaMax/(pi*p.kB*p.T)))-1; % converts the maximum energy and temperature into the highest Matsubara index
 fprintf('Run output folder: %s\n',opt.outputDir);
 fprintf('Sweep has %d mu_N/Delta points; rolling checkpoint every %d points.\n', ...
     numel(muRatio),opt.checkpointEvery);
@@ -294,8 +294,7 @@ for im = 1:Nmu
     kyMax = min(kyMaxN,sqrt(0.95)*kyS); % Caps the integration range at the smaller of that extended normal-channel limit and sqrt(0.95)*kyS. 
     % The cap avoids integrating right up to the lead's transverse-mode cutoff.
     kyOpen = min(kyF,kyMax); % Marks the boundary between modes that propagate in the normal channel and evanescent modes
-    [ky,wky] = transverseQuadrature(kyOpen,kyMax, ...
-        xOpen,wOpen,xEvan,wEvan % The quadrature points ky and weights wky over the propagating and evanescent ranges, so the code can numerically integrate their contributions.
+    [ky,wky] = transverseQuadrature(kyOpen,kyMax,xOpen,wOpen,xEvan,wEvan); % The quadrature points ky and weights wky over the propagating and evanescent ranges, so the code can numerically integrate their contributions.
 
     Ismooth = zeros(opt.Npos,numel(phi)); % The CPR calculated for the smooth junction profile
     Iabrupt = zeros(opt.Npos,numel(phi)); % The CPR calculated for the abrupt junction profile
